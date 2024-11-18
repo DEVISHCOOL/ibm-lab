@@ -1,0 +1,44 @@
+ 
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+employee = pd.read_csv(r"Telco-Customer-Churn.csv")
+employee.head()
+employee = employee.drop(['customerID'],axis=1)
+employee.columns
+employee['TotalCharges'] =employee["TotalCharges"].replace(" ",np.nan).astype(float)
+employee.isna().sum()
+employee.TotalCharges.fillna(employee.TotalCharges.mean(),inplace=True)
+employee.isna().sum()
+employee.head()
+employee['Churn'] = employee['Churn'].map({'No': 0, 'Yes': 1})
+employee_encoded = pd.get_dummies(employee, drop_first=True)
+employee_encoded.head()
+X = employee_encoded.drop('Churn', axis=1)
+y = employee_encoded['Churn']
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, random_state=42)
+Model= RandomForestClassifier(n_estimators=100, random_state=42)
+Model.fit(X_train, y_train)
+y_pred = Model.predict(X_test)
+results_df = pd.DataFrame({
+'Actual value': y_test,
+'Predicted value': y_pred
+})
+results_df
+conf_matrix = confusion_matrix(y_test, y_pred)
+print(conf_matrix)
+labels = ['Not Churned', 'Churned']
+sizes = [conf_matrix[0, 0] + conf_matrix[0, 1], conf_matrix[1, 0] + conf_matrix[1, 1]]
+colors = ['#ff9999','#66b3ff']
+explode = (0.1, 0)
+plt.figure(figsize=(8, 6))
+plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
+shadow=True, startangle=140)
+plt.title('Customer Churn Prediction Distribution')
+plt.axis('equal')
+plt.show()

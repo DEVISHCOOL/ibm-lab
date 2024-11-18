@@ -1,0 +1,71 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import ndimage
+
+# Load the original image
+pic = cv2.imread(r"luffy.jpg")
+# Convert BGR to RGB for correct color display in Matplotlib
+pic_rgb = cv2.cvtColor(pic, cv2.COLOR_BGR2RGB)
+# Display the original image
+plt.imshow(pic_rgb)
+plt.title("Original Image")
+plt.axis('off')
+plt.show()
+
+# Load the image in grayscale
+pic_gray = cv2.imread(r"luffy.jpg", cv2.IMREAD_GRAYSCALE)
+# Display the grayscale image
+plt.imshow(pic_gray, cmap='gray')
+plt.title("Grayscale Image")
+plt.axis('off')
+plt.show()
+
+# Flip the grayscale image upside down
+flip_pic = np.flipud(pic_gray)
+# Display the flipped image
+plt.imshow(flip_pic, cmap='gray')
+plt.title("Flipped Image")
+plt.axis('off')
+plt.show()
+
+# Rotate the grayscale image by 45 degrees
+rot_pic = ndimage.rotate(pic_gray, 45, reshape=True)
+# Display the rotated image
+plt.imshow(rot_pic, cmap='gray')
+plt.title("Rotated Image")
+plt.axis('off')
+plt.show()
+
+# Apply Gaussian blur with sigma=5
+gauss_pic = ndimage.gaussian_filter(pic_gray, 5)
+# Display the Gaussian blurred image
+plt.imshow(gauss_pic, cmap='gray')
+plt.title("Gaussian Blurred Image")
+plt.axis('off')
+plt.show()
+
+# Create a negative of the grayscale image
+pic_negative = 255 - pic_gray
+# Display the negative image
+plt.imshow(pic_negative, cmap='gray')
+plt.title("Negative Image")
+plt.axis('off')
+plt.show()
+
+# Get the dimensions of the image
+height, width = pic.shape[:2]
+print(f"Dimensions (Height x Width): {height} x {width}")
+
+# Access pixel value at (100, 100)
+pixels = pic[100, 100]
+print(f"Pixel value at (100, 100): {pixels}")
+
+# Print image shape and size
+print(f"Image shape: {pic.shape}")
+print(f"Total number of pixels: {pic.size}")
+
+# Print statistical properties of the image
+print(f"Mean pixel value: {pic.mean()}")
+print(f"Max pixel value: {pic.max()}")
+print(f"Min pixel value: {pic.min()}")
