@@ -1,0 +1,31 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+data = pd.read_csv(r'spam.csv')
+data.head()
+data.info()
+data.describe()
+X = data['EmailText'].values
+y = data['Label'].values
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
+cv = CountVectorizer()
+X_train = cv.fit_transform(X_train)
+X_test = cv.transform(X_test)
+classifier = SVC(kernel='rbf', random_state=10)  # rbf -> Radial Basis Function
+classifier.fit(X_train, y_train)
+y_pred = classifier.predict(X_test)
+comparison_df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+comparison_df
+print("Model Accuracy:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+n = pd.value_counts(data["Label"], sort=True)
+n.plot(kind='barh', color=["green", "red"])
+plt.title('Label Distribution')
+plt.xlabel('Count')
+plt.ylabel('Label')
+plt.show()
+print("gudipati lakshmi, 211191101040")
